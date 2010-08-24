@@ -1,0 +1,8 @@
+Build.PL
+Changes
+MANIFEST
+README
+lib/Mojolicious/Plugin/Mail.pm
+t/mail.t
+Makefile.PL
+META.yml
