@@ -12,7 +12,7 @@ use MIME::EncWords ();
 use constant TEST    => $ENV{MOJO_MAIL_TEST} || 0;
 use constant CHARSET => 'UTF-8';
 
-our $VERSION = '0.5';
+our $VERSION = '0.51';
 
 __PACKAGE__->attr(conf => sub { +{} });
 
@@ -36,11 +36,9 @@ sub register {
 	$app->renderer->add_helper(
 		render_mail => sub {
 			my $self = shift;
-			my $args = { @_ };
-			
 			my $data = $self->render_partial(@_, format => 'mail');
 			
-			delete @{$self->stash}{ qw(partial mojo.content mojo.rendered format), keys %$args };
+			delete @{$self->stash}{ qw(partial mojo.content mojo.rendered format) };
 			return $data;
 		},
 	);
@@ -131,7 +129,7 @@ __END__
 
 =head1 NAME
 
-Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail.
+Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail
 
 =head1 SYNOPSIS
 
@@ -139,47 +137,60 @@ Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail.
   $self->plugin(mail => {
     from     => 'sharifulin@gmail.com',
     encoding => 'base64',
-    type     => 'text/html',
     how      => 'sendmail',
     howargs  => [ '/usr/sbin/sendmail -t' ],
   });
 
   # Mojolicious::Lite
-  plugin mail => { ... };
+  plugin mail => { ... }; # second param is conf 
+
 
   # in controller
   $self->helper('mail',
     mail => {
       To      => 'sharifulin@gmail.com',
-      Subject => 'Test email',
-      Data    => '<p>Привет!</p>',
+      Subject => 'Test',
+      Data    => 'use Perl or die;',
     }
   );
 
 
 =head1 DESCRIPTION
 
-L<Mojolicous::Plugin::Mail> is a plugin to send mail using L<MIME::Lite>.
+L<Mojolicous::Plugin::Mail> is a plugin for Mojolicious apps to send mail using L<MIME::Lite>.
 
 =head1 HELPERS
 
-L<Mojolicious::Plugin::Mail> contains two helpers: mail and render_mail.
+L<Mojolicious::Plugin::Mail> contains two helpers: I<mail> and I<render_mail>.
 
 =head2 C<mail>
 
   $self->helper('mail',
-      test   => 1, # test mode
-      mail   => { ... }, # as MIME::Lite->new( ... )
+      # test mode
+      test   => 1,
+      
+      # as MIME::Lite->new( ... )
+      mail   => {
+        To      => 'sharifulin@gmail.com',
+        Subject => 'Test',
+        Data    => 'use Perl or die;',
+      },
+
       attach => [
-        { ... }, # as MIME::Lite->attach( .. )
+        # as MIME::Lite->attach( .. )
+        { ... },
         ...
       },
+
       headers => [
-        { ... }, # as MIME::Lite->add( .. )
+        # as MIME::Lite->add( .. )
+        { ... },
         ...
       },
+
       attr => [
-        { ... }, # as MIME::Lite->attr( .. )
+        # as MIME::Lite->attr( .. )
+        { ... },
         ...
       },
   );
@@ -192,19 +203,19 @@ Supported parameters:
 
 =item * mail
 
-Hashref, containts parameters as I<new(PARAMHASH)>. See MIME::Lite L<http://search.cpan.org/~rjbs/MIME-Lite-3.027/lib/MIME/Lite.pm#Construction>.
+Hashref, containts parameters as I<new(PARAMHASH)>. See L<MIME::Lite>.
 
 =item * attach 
 
-Arrayref of hashref, hashref containts parameters as I<attach(PARAMHASH)>. See MIME::Lite L<http://search.cpan.org/~rjbs/MIME-Lite-3.027/lib/MIME/Lite.pm#Construction>.
+Arrayref of hashref, hashref containts parameters as I<attach(PARAMHASH)>. See L<MIME::Lite>.
 
 =item * headers
 
-Arrayref of hashref, hashref containts parameters as I<add(TAG, VALUE)>. See MIME::Lite L<http://search.cpan.org/~rjbs/MIME-Lite-3.027/lib/MIME/Lite.pm#Construction>.
+Arrayref of hashref, hashref containts parameters as I<add(TAG, VALUE)>. See L<MIME::Lite>.
 
 =item * attr
 
-Arrayref of hashref, hashref containts parameters as I<attr(ATTR, VALUE)>. See MIME::Lite L<http://search.cpan.org/~rjbs/MIME-Lite-3.027/lib/MIME/Lite.pm#Construction>.
+Arrayref of hashref, hashref containts parameters as I<attr(ATTR, VALUE)>. See L<MIME::Lite>.
 
 =item * test
 
@@ -214,9 +225,12 @@ Test mode, don't send mail.
 
 =head2 C<render_mail>
 
-  my $data = $self->render_mail( ... ); # any stash params;
+  my $data = $self->helper('render_mail', 'user/signup');
 
-Render mail template and return data, mail template format is I<mail>, i.e. I<controller/action.mail.ep>.
+  # or use stash params
+  my $data = $self->helper('render_mail', template => 'user/signup', user => $user);
+
+Render mail template and return data, mail template format is I<mail>, i.e. I<user/signup.mail.ep>.
 
 =head1 ATTRIBUTES
 
@@ -228,7 +242,7 @@ L<Mojolicious::Plugin::Mail> contains one attribute - conf.
 
 Config of mail plugin, hashref.
 
-Keys of hashref:
+Keys of conf:
 
 =over 6
 
@@ -242,21 +256,36 @@ Default encoding of Subject and any Data, value is MIME::Lite content transfer e
 
 =item * charset
 
-Default charset of Subject and any Data, default value is UTF-8
+Default charset of Subject and any Data, default value is I<UTF-8>
 
 =item * type
 
-Default type of Data, default value is text/plain.
+Default type of Data, default value is I<text/plain>.
 
 =item * how
 
-HOW parameter of MIME::Lite::send, value are sendmail or smtp
+HOW parameter of MIME::Lite::send: I<sendmail> or I<smtp>.
 
 =item * howargs 
 
-HOWARGS parameter of MIME::Lite::send (arrayref)
+HOWARGS parameter of MIME::Lite::send (arrayref).
 
 =back
+
+  my $conf = {
+    from     => 'sharifulin@gmail.com,
+    encoding => 'base64',
+    type     => 'text/html',
+    how      => 'sendmail',
+    howargs  => [ '/usr/sbin/sendmail -t' ],
+  };
+
+  # in Mojolicious app
+  $self->plugin(mail => $conf);
+  
+  # in Mojolicious::Lite app
+  plugin mail => $conf;
+
 
 =head1 METHODS
 

@@ -20,7 +20,7 @@ my $builder = Module::Build->new(
 	add_to_cleanup  => [],
 	meta_merge => {
 		resources => {
-			repository => 'git://github.com/sharifulin/Mojolicious-Plugin-Mail.git',
+			repository => 'http://github.com/sharifulin/Mojolicious-Plugin-Mail',
 		},
 		keywords => ['mojo', 'mojolicious', 'mime', 'mail', 'plugin'],
 	},

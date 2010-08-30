@@ -10,24 +10,24 @@ SYNOPSIS
   $self->plugin(mail => {
     from     => 'sharifulin@gmail.com',
     encoding => 'base64',
-    type     => 'text/html',
     how      => 'sendmail',
     howargs  => [ '/usr/sbin/sendmail -t' ],
   });
 
   # Mojolicious::Lite
-  plugin mail => { ... };
+  plugin mail => { ... }; # second param is conf 
+
 
   # in controller
   $self->helper('mail',
     mail => {
       To      => 'sharifulin@gmail.com',
-      Subject => 'Test email',
-      Data    => '<p>Привет!</p>',
+      Subject => 'Test',
+      Data    => 'use Perl or die;',
     }
   );
 
-See Mojolicious::Plugin::Mail.
+See documentation of Mojolicious::Plugin::Mail on CPAN http://search.cpan.org/dist/Mojolicious-Plugin-Mail/
 
 
 INSTALLATION
