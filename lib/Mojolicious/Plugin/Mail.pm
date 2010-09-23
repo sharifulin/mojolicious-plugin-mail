@@ -165,7 +165,7 @@ Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail
   # in controller
   $self->helper('mail',
     to      => 'sharifulin@gmail.com',
-    subject => 'Test'm
+    subject => 'Test',
     data    => 'use Perl or die;',
   );
 
