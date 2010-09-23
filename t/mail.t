@@ -23,6 +23,19 @@ get '/simple' => sub {
 	my $self = shift;
 	
 	my $mail = $self->helper('mail',
+		test    => 1,
+		to      => 'sharifulin@gmail.com',
+		subject => 'Тест письмо',
+		data    => "<p>Привет!</p>",
+	);
+	
+	$self->render_json({ ok => 1, mail => $mail });
+};
+
+get '/simple1' => sub {
+	my $self = shift;
+	
+	my $mail = $self->helper('mail',
 		test => 1,
 		mail => {
 			To      => 'sharifulin@gmail.com',
@@ -38,8 +51,9 @@ get '/simple2' => sub {
 	my $self = shift;
 	
 	my $mail = $self->helper('mail',
-		test => 1,
-		mail => {
+		test     => 1,
+		nomailer => 1,
+		mail     => {
 			To      => '"Анатолий Шарифулин" sharifulin@gmail.com',
 			Cc      => '"Анатолий Шарифулин" <sharifulin@gmail.com>, Anatoly Sharifulin sharifulin@gmail.com',
 			Bcc     => 'sharifulin@gmail.com',
@@ -59,7 +73,6 @@ get '/attach' => sub {
 		test => 1,
 		charset  => 'windows-1251',
 		mimeword => 0,
-
 		mail => {
 			To      => 'sharifulin@gmail.com',
 			Subject => 'Test attach',
@@ -147,9 +160,47 @@ get '/render2' => sub {
 	$self->render(ok => 1, mail => $mail);
 } => 'render';
 
+get '/render_without_subject' => sub {
+	my $self = shift;
+	
+	my $data = $self->helper('render_mail', 'render2');
+	my $mail = $self->helper('mail',
+		test => 1,
+		mail => {
+			To   => 'sharifulin@gmail.com',
+			Data => $data,
+		},
+	);
+	
+	$self->render(ok => 1, mail => $mail);
+} => 'render';
+
+get '/render_without_data' => sub {
+	my $self = shift;
+	
+	my $mail = $self->helper('mail',
+		test => 1,
+		mail => { To => 'sharifulin@gmail.com' },
+	);
+	
+	$self->render(ok => 1, mail => $mail);
+} => 'render2';
+
+get '/render_simple' => sub {
+	my $self = shift;
+	
+	my $mail = $self->helper('mail',
+		test => 1,
+		to   => 'sharifulin@gmail.com',
+		from => 'tollik@mail.ru',
+	);
+	
+	$self->render(ok => 1, mail => $mail);
+} => 'render2';
+
 #
 
-use Test::More tests => 91;
+use Test::More tests => 148;
 use Test::Mojo;
 
 use Mojo::Headers;
@@ -192,7 +243,7 @@ $json = $t->get_ok('/simple')
 	is $body, b("<p>Привет!</p>")->b64_encode, 'simple';
 }
 
-$json = $t->get_ok('/simple2')
+$json = $t->get_ok('/simple1')
   ->status_is(200)
   ->tx->res->json
 ;
@@ -207,10 +258,36 @@ $json = $t->get_ok('/simple2')
 	my $h = Mojo::Headers->new; $h->parse("$raw\n\n");
 	
 	is $h->header('MIME-Version'), '1.0';
-	is $h->header('Content-Type'), 'text/plain; charset="UTF-8"';
+	is $h->header('Content-Type'), 'text/html; charset="UTF-8"';
 	is $h->header('Content-Disposition'), 'inline';
 	is $h->header('Content-Transfer-Encoding'), 'base64';
 	like $h->header('X-Mailer'), qr/Mojolicious/;
+	
+	is $h->header('To'), 'sharifulin@gmail.com';
+	is $h->header('From'), 'sharifulin@gmail.com';
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Тест письмо')->b64_encode('') . "?=";
+	
+	is $body, b("<p>Привет!</p>")->b64_encode, 'simple';
+}
+
+$json = $t->get_ok('/simple2')
+  ->status_is(200)
+  ->tx->res->json
+;
+{
+	is ref $json, 'HASH';
+	is exists $json->{ok}, 1;
+	is defined $json->{ok}, 1;
+	is exists $json->{mail}, 1;
+	
+	my($raw, $body) = split /\n\n/, $json->{mail};
+	my $h = Mojo::Headers->new; $h->parse("$raw\n\n");
+	
+	is $h->header('MIME-Version'), '1.0';
+	is $h->header('Content-Type'), 'text/plain; charset="UTF-8"';
+	is $h->header('Content-Disposition'), 'inline';
+	is $h->header('Content-Transfer-Encoding'), 'base64';
+	is exists $h->{'X-Mailer'}, '';
 	
 	is $h->header('To'), '=?UTF-8?B?ItCQ0L3QsNGC0L7Qu9C40Lkg0KjQsNGA0LjRhNGD0LvQuNC9Ig==?= <sharifulin@gmail.com>';
 	is $h->header('Cc'), '=?UTF-8?B?ItCQ0L3QsNGC0L7Qu9C40Lkg0KjQsNGA0LjRhNGD0LvQuNC9Ig==?= <sharifulin@gmail.com>, Anatoly Sharifulin <sharifulin@gmail.com>';
@@ -329,6 +406,90 @@ my $d = $t->get_ok('/render2')
 	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render2';
 }
 
+$d = $t->get_ok('/render_without_subject')
+  ->status_is(200)
+  ->tx->res->body
+;
+
+{
+	is defined $d, 1;
+	like $d, qr{<p>Hello render!</p>};
+	like $d, qr{<p>1</p>};
+	
+	$d =~ m{.*<p>(.*?)</p>}s;
+	
+	my($raw, $body) = split /\n\n/, $1;
+	my $h = Mojo::Headers->new; $h->parse("$raw\n\n");
+	
+	is $h->header('MIME-Version'), '1.0';
+	is $h->header('Content-Type'), 'text/html; charset="UTF-8"';
+	is $h->header('Content-Disposition'), 'inline';
+	is $h->header('Content-Transfer-Encoding'), 'base64';
+	like $h->header('X-Mailer'), qr/Mojolicious/;
+	
+	is $h->header('To'), 'sharifulin@gmail.com';
+	is $h->header('From'), 'sharifulin@gmail.com';
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->b64_encode('') . "?=";
+	
+	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render_without_subject';
+}
+
+$d = $t->get_ok('/render_without_data')
+  ->status_is(200)
+  ->tx->res->body
+;
+
+{
+	is defined $d, 1;
+	like $d, qr{<p>Hello render!</p>};
+	like $d, qr{<p>1</p>};
+	
+	$d =~ m{.*<p>(.*?)</p>}s;
+	
+	my($raw, $body) = split /\n\n/, $1;
+	my $h = Mojo::Headers->new; $h->parse("$raw\n\n");
+	
+	is $h->header('MIME-Version'), '1.0';
+	is $h->header('Content-Type'), 'text/html; charset="UTF-8"';
+	is $h->header('Content-Disposition'), 'inline';
+	is $h->header('Content-Transfer-Encoding'), 'base64';
+	like $h->header('X-Mailer'), qr/Mojolicious/;
+	
+	is $h->header('To'), 'sharifulin@gmail.com';
+	is $h->header('From'), 'sharifulin@gmail.com';
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->b64_encode('') . "?=";
+	
+	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render_without_data';
+}
+
+$d = $t->get_ok('/render_simple')
+  ->status_is(200)
+  ->tx->res->body
+;
+
+{
+	is defined $d, 1;
+	like $d, qr{<p>Hello render!</p>};
+	like $d, qr{<p>1</p>};
+	
+	$d =~ m{.*<p>(.*?)</p>}s;
+	
+	my($raw, $body) = split /\n\n/, $1;
+	my $h = Mojo::Headers->new; $h->parse("$raw\n\n");
+	
+	is $h->header('MIME-Version'), '1.0';
+	is $h->header('Content-Type'), 'text/html; charset="UTF-8"';
+	is $h->header('Content-Disposition'), 'inline';
+	is $h->header('Content-Transfer-Encoding'), 'base64';
+	like $h->header('X-Mailer'), qr/Mojolicious/;
+	
+	is $h->header('To'), 'sharifulin@gmail.com';
+	is $h->header('From'), 'tollik@mail.ru';
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->b64_encode('') . "?=";
+	
+	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render_simple';
+}
+
 __DATA__
 
 @@ render.html.ep
@@ -338,6 +499,11 @@ __DATA__
 
 @@ render.mail.ep
 <p>Привет mail render!</p>
+
+@@ render2.html.ep
+<p>Hello render!</p>
+<p><%= $ok %></p>
+<p><%== $mail %></p>
 
 @@ render2.mail.ep
 % stash 'subject' => 'Привет render2';

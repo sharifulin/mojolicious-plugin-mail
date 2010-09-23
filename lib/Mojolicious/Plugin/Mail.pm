@@ -12,7 +12,7 @@ use MIME::EncWords ();
 use constant TEST    => $ENV{MOJO_MAIL_TEST} || 0;
 use constant CHARSET => 'UTF-8';
 
-our $VERSION = '0.51';
+our $VERSION = '0.6';
 
 __PACKAGE__->attr(conf => sub { +{} });
 
@@ -24,8 +24,21 @@ sub register {
 	$app->renderer->add_helper(
 		mail => sub {
 			my $self = shift;
-			my $msg  = @_ ? $plugin->build( @_ ) : return;
+			my $args = @_ ? { @_ } : return;
 			
+			# simple interface
+			unless (exists $args->{mail}) {
+				$args->{mail}->{ $_->[1] } = delete $args->{ $_->[0] }
+					for grep { $args->{ $_->[0] } }
+						[to => 'To'], [from => 'From'], [cc => 'Cc'], [bcc => 'Bcc'], [subject => 'Subject'], [data => 'Data']
+				;
+			}
+			
+			# hidden data and subject
+			$args->{mail}->{Data   } ||= $self->helper('render_mail');
+			$args->{mail}->{Subject} ||= $self->stash ('subject');
+			
+			my $msg  = $plugin->build( %$args );
 			my $test = { @_ }->{test} || TEST;
 			$msg->send( $conf->{'how'}, @{$conf->{'howargs'}||[]} ) unless $test;
 			
@@ -98,7 +111,7 @@ sub build {
 	$msg->delete('X-Mailer'); # remove default MIME::Lite header
 	$msg->add   ( %$_ ) for @{$p->{headers} || []}; # XXX: add From|To|Cc|Bcc => ... (mimeword)
 	$msg->add   ('X-Mailer' => join ' ', 'Mojolicious',  $Mojolicious::VERSION, __PACKAGE__, $VERSION, '(Perl)')
-		unless $msg->get('X-Mailer');
+		unless $msg->get('X-Mailer') || $p->{nomailer};
 	
 	# attr
 	$msg->attr( %$_ ) for @{$p->{attr   } || []};
