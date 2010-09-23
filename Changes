@@ -1,5 +1,11 @@
 Revision history for Mojolicious-Plugin-Mail
 
+0.6   2010-09-23/13:20
+    * New simple interface
+    * If no subject, uses stash 'subject' (Dmitriy Konstantinov)
+    * If no data, call render_mail (Alexey Likhatskiy)
+    * Replace default value of X-Mailer and nomailer option (Dominic Neumann)
+
 0.51  2010-08-30/12:33
 	* Fixes of documentation.
 	* Removed warning "Odd number of elements in anonymous hash" (nuclon).

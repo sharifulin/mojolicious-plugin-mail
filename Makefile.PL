@@ -10,8 +10,8 @@ WriteMakefile
           'PREREQ_PM' => {
                            'Test::More' => 0,
                            'MIME::EncWords' => 0,
-                           'MIME::Lite' => 0,
-                           'Mojolicious' => 0,
+                           'MIME::Lite' => '3.027',
+                           'Mojolicious' => '0.999929',
                            'Encode' => 0
                          }
         )
