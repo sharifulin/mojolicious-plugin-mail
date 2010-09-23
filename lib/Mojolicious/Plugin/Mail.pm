@@ -94,11 +94,17 @@ sub build {
 	
 	my $msg = MIME::Lite->new( %$mail );
 	
+	# header
+	$msg->delete('X-Mailer'); # remove default MIME::Lite header
 	$msg->add   ( %$_ ) for @{$p->{headers} || []}; # XXX: add From|To|Cc|Bcc => ... (mimeword)
+	$msg->add   ('X-Mailer' => join ' ', 'Mojolicious',  $Mojolicious::VERSION, __PACKAGE__, $VERSION, '(Perl)')
+		unless $msg->get('X-Mailer');
 	
-	$msg->attr  ( %$_ ) for @{$p->{attr   } || []};
-	$msg->attr  ('content-type.charset' => $charset) if $charset;
+	# attr
+	$msg->attr( %$_ ) for @{$p->{attr   } || []};
+	$msg->attr('content-type.charset' => $charset) if $charset;
 	
+	# attach
 	$msg->attach( %$_ ) for
 		grep {
 			if (!$_->{Type} || $_->{Type} eq 'TEXT') {
@@ -110,8 +116,6 @@ sub build {
 		grep { $_->{Data} || $_->{Path} }
 		@{$p->{attach} || []}
 	;
-	
-	$msg->replace('X-Mailer' => join ' ', 'Mojolicious',  $Mojolicious::VERSION, __PACKAGE__, $VERSION, '(Perl)');
 	
 	return $msg;
 }

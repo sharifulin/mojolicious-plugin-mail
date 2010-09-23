@@ -76,7 +76,7 @@ get '/attach' => sub {
 				Data        => 'binary data binary data binary data binary data binary data',
 			},
 		],
-		headers => [ { 'X-My-Header' => 'Mojolicious' } ],
+		headers => [ { 'X-My-Header' => 'Mojolicious' }, { 'X-Mailer' => 'My mail client' } ],
 	);
 	
 	$self->render_json({ ok => 1, mail => $mail });
@@ -238,7 +238,7 @@ $json = $t->get_ok('/attach')
 	like $h->header('Content-Type'), qr{multipart/mixed; boundary=".*?"; charset="windows-1251"};
 	is $h->header('Content-Transfer-Encoding'), 'binary';
 	is $h->header('X-My-Header'), 'Mojolicious';
-	like $h->header('X-Mailer'), qr/Mojolicious/;
+	is $h->header('X-Mailer'), 'My mail client';
 	
 	is $h->header('To'), 'sharifulin@gmail.com';
 	is $h->header('From'), 'sharifulin@gmail.com';
