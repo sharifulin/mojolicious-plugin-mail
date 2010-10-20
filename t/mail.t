@@ -193,10 +193,11 @@ get '/render_simple' => sub {
 		test => 1,
 		to   => 'sharifulin@gmail.com',
 		from => 'tollik@mail.ru',
+		template => 'render2',
 	);
 	
-	$self->render(ok => 1, mail => $mail);
-} => 'render2';
+	$self->render(ok => 1, mail => $mail, template => 'render2');
+};
 
 #
 

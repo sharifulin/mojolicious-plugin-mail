@@ -1,5 +1,9 @@
 Revision history for Mojolicious-Plugin-Mail
 
+0.7   2010-10-20/20:00
+	* new Mojolicious version
+	* support stash params
+
 0.6   2010-09-23/13:20
     * New simple interface
     * If no subject, uses stash 'subject' (Dmitriy Konstantinov)

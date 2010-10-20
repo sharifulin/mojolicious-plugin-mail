@@ -12,7 +12,7 @@ use MIME::EncWords ();
 use constant TEST    => $ENV{MOJO_MAIL_TEST} || 0;
 use constant CHARSET => 'UTF-8';
 
-our $VERSION = '0.6';
+our $VERSION = '0.7';
 
 __PACKAGE__->attr(conf => sub { +{} });
 
@@ -35,11 +35,18 @@ sub register {
 			}
 			
 			# hidden data and subject
-			$args->{mail}->{Data   } ||= $self->helper('render_mail');
+			
+			my @stash =
+				map  { $_ => $args->{$_} }
+				grep { !/^(to|from|cc|bcc|subject|data|test|mail|attach|headers|attr|charset|mimeword|nomailer)$/ }
+				keys %$args
+			;
+			
+			$args->{mail}->{Data   } ||= $self->helper('render_mail', @stash);
 			$args->{mail}->{Subject} ||= $self->stash ('subject');
 			
 			my $msg  = $plugin->build( %$args );
-			my $test = { @_ }->{test} || TEST;
+			my $test = $args->{test} || TEST;
 			$msg->send( $conf->{'how'}, @{$conf->{'howargs'}||[]} ) unless $test;
 			
 			return $msg->as_string;
