@@ -16,13 +16,13 @@ plugin mail => {
 
 get '/empty' => sub {
 	my $self = shift;
-	$self->render_json({ ok => 1, mail => $self->helper('mail') || undef})
+	$self->render_json({ ok => 1, mail => $self->mail || undef})
 };
 
 get '/simple' => sub {
 	my $self = shift;
 	
-	my $mail = $self->helper('mail',
+	my $mail = $self->mail(
 		test    => 1,
 		to      => 'sharifulin@gmail.com',
 		subject => 'Тест письмо',
@@ -35,7 +35,7 @@ get '/simple' => sub {
 get '/simple1' => sub {
 	my $self = shift;
 	
-	my $mail = $self->helper('mail',
+	my $mail = $self->mail(
 		test => 1,
 		mail => {
 			To      => 'sharifulin@gmail.com',
@@ -50,7 +50,7 @@ get '/simple1' => sub {
 get '/simple2' => sub {
 	my $self = shift;
 	
-	my $mail = $self->helper('mail',
+	my $mail = $self->mail(
 		test     => 1,
 		nomailer => 1,
 		mail     => {
@@ -69,7 +69,7 @@ get '/simple2' => sub {
 get '/attach' => sub {
     my $self = shift;
     
-	my $mail = $self->helper('mail',
+	my $mail = $self->mail(
 		test => 1,
 		charset  => 'windows-1251',
 		mimeword => 0,
@@ -98,7 +98,7 @@ get '/attach' => sub {
 get '/multi' => sub {
     my $self = shift;
     
-	my $mail = $self->helper('mail',
+	my $mail = $self->mail(
 		test => 1,
 		mail => {
 			To      => 'sharifulin@gmail.com',
@@ -131,7 +131,7 @@ get '/multi' => sub {
 get '/render' => sub {
 	my $self = shift;
 
-	my $mail = $self->helper('mail',
+	my $mail = $self->mail(
 		test => 1,
 		mail => {
 			To      => 'sharifulin@gmail.com',
@@ -147,8 +147,8 @@ get '/render' => sub {
 get '/render2' => sub {
 	my $self = shift;
 	
-	my $data = $self->helper('render_mail', 'render2');
-	my $mail = $self->helper('mail',
+	my $data = $self->render_mail('render2');
+	my $mail = $self->mail(
 		test => 1,
 		mail => {
 			To      => 'sharifulin@gmail.com',
@@ -163,8 +163,8 @@ get '/render2' => sub {
 get '/render_without_subject' => sub {
 	my $self = shift;
 	
-	my $data = $self->helper('render_mail', 'render2');
-	my $mail = $self->helper('mail',
+	my $data = $self->render_mail('render2');
+	my $mail = $self->mail(
 		test => 1,
 		mail => {
 			To   => 'sharifulin@gmail.com',
@@ -178,7 +178,7 @@ get '/render_without_subject' => sub {
 get '/render_without_data' => sub {
 	my $self = shift;
 	
-	my $mail = $self->helper('mail',
+	my $mail = $self->mail(
 		test => 1,
 		mail => { To => 'sharifulin@gmail.com' },
 	);
@@ -189,7 +189,7 @@ get '/render_without_data' => sub {
 get '/render_simple' => sub {
 	my $self = shift;
 	
-	my $mail = $self->helper('mail',
+	my $mail = $self->mail(
 		test => 1,
 		to   => 'sharifulin@gmail.com',
 		from => 'tollik@mail.ru',
@@ -353,7 +353,7 @@ $json = $t->get_ok('/multi')
 
 my $data = $t->get_ok('/render')
   ->status_is(200)
-  ->tx->res
+  ->tx->res->body
 ;
 
 {

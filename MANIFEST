@@ -1,7 +1,7 @@
 Build.PL
 Changes
 MANIFEST
-README
+README.pod
 lib/Mojolicious/Plugin/Mail.pm
 t/mail.t
 Makefile.PL
