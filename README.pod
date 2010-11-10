@@ -7,17 +7,16 @@ Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail
 
 =head1 SYNOPSIS
 
-  # Mojolicious
+   # Mojolicious::Lite
+   plugin 'mail';
+
+  # Mojolicious with config
   $self->plugin(mail => {
     from     => 'sharifulin@gmail.com',
     encoding => 'base64',
     how      => 'sendmail',
     howargs  => [ '/usr/sbin/sendmail -t' ],
   });
-
-  # Mojolicious::Lite
-  plugin mail => { ... }; # second param is conf 
-
 
   # in controller
   $self->mail(
@@ -180,15 +179,16 @@ Keys of conf:
 
 =item * from
 
-Default from address
+From address, default value is I<test-mail-plugin@mojolicio.us>.
 
 =item * encoding 
 
-Default encoding of Subject and any Data, value is MIME::Lite content transfer encoding L<http://search.cpan.org/~rjbs/MIME-Lite-3.027/lib/MIME/Lite.pm#Content_transfer_encodings>
+Encoding of Subject and any Data, value is MIME::Lite content transfer encoding L<http://search.cpan.org/~rjbs/MIME-Lite-3.027/lib/MIME/Lite.pm#Content_transfer_encodings>
+Default value is I<base64>.
 
 =item * charset
 
-Default charset of Subject and any Data, default value is I<UTF-8>
+Default charset of Subject and any Data, default value is I<UTF-8>.
 
 =item * type
 
@@ -250,6 +250,8 @@ L<Mojolicious::Plugin::Mail> has test mode, no send mail.
   );
 
 =head1 EXAMPLES
+
+The Mojolicious::Lite example you can see in I<example/test.pl>.
 
 Simple interface for send mail:
 

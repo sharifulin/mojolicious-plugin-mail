@@ -4,5 +4,6 @@ MANIFEST
 README.pod
 lib/Mojolicious/Plugin/Mail.pm
 t/mail.t
+example/test.pl
 Makefile.PL
 META.yml

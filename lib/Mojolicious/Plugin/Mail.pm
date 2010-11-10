@@ -9,8 +9,10 @@ use Encode ();
 use MIME::Lite;
 use MIME::EncWords ();
 
-use constant TEST    => $ENV{MOJO_MAIL_TEST} || 0;
-use constant CHARSET => 'UTF-8';
+use constant TEST     => $ENV{MOJO_MAIL_TEST} || 0;
+use constant FROM     => 'test-mail-plugin@mojolicio.us';
+use constant CHARSET  => 'UTF-8';
+use constant ENCODING => 'base64';
 
 our $VERSION = '0.7';
 
@@ -18,6 +20,11 @@ __PACKAGE__->attr(conf => sub { +{} });
 
 sub register {
 	my ($plugin, $app, $conf) = @_;
+	
+	# default values
+	$conf->{from    } ||= FROM;
+	$conf->{charset } ||= CHARSET;
+	$conf->{encoding} ||= ENCODING;
 	
 	$plugin->conf( $conf ) if $conf;
 	
@@ -70,7 +77,7 @@ sub build {
 	my $p    = { @_ };
 	
 	my $mail     = $p->{mail};
-	my $charset  = $p->{charset } || $conf->{charset } || CHARSET;
+	my $charset  = $p->{charset } || $conf->{charset };
 	my $encoding = $p->{encoding} || $conf->{encoding};
 	my $encode   = $encoding eq 'base64' ? 'B' : 'Q';
 	my $mimeword = defined $p->{mimeword} ? $p->{mimeword} : !$encoding ? 0 : 1;
@@ -157,17 +164,16 @@ Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail
 
 =head1 SYNOPSIS
 
-  # Mojolicious
+   # Mojolicious::Lite
+   plugin 'mail';
+
+  # Mojolicious with config
   $self->plugin(mail => {
     from     => 'sharifulin@gmail.com',
     encoding => 'base64',
     how      => 'sendmail',
     howargs  => [ '/usr/sbin/sendmail -t' ],
   });
-
-  # Mojolicious::Lite
-  plugin mail => { ... }; # second param is conf 
-
 
   # in controller
   $self->mail(
@@ -330,15 +336,16 @@ Keys of conf:
 
 =item * from
 
-Default from address
+From address, default value is I<test-mail-plugin@mojolicio.us>.
 
 =item * encoding 
 
-Default encoding of Subject and any Data, value is MIME::Lite content transfer encoding L<http://search.cpan.org/~rjbs/MIME-Lite-3.027/lib/MIME/Lite.pm#Content_transfer_encodings>
+Encoding of Subject and any Data, value is MIME::Lite content transfer encoding L<http://search.cpan.org/~rjbs/MIME-Lite-3.027/lib/MIME/Lite.pm#Content_transfer_encodings>
+Default value is I<base64>.
 
 =item * charset
 
-Default charset of Subject and any Data, default value is I<UTF-8>
+Default charset of Subject and any Data, default value is I<UTF-8>.
 
 =item * type
 
@@ -400,6 +407,8 @@ L<Mojolicious::Plugin::Mail> has test mode, no send mail.
   );
 
 =head1 EXAMPLES
+
+The Mojolicious::Lite example you can see in I<example/test.pl>.
 
 Simple interface for send mail:
 
