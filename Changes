@@ -1,7 +1,7 @@
 Revision history for Mojolicious-Plugin-Mail
 
 0.7   2010-11-10/23:26
-	* new Mojolicious version
+	* support new Mojolicious version
 	* support stash params
 	* add README.pod
 	* remove warnings
