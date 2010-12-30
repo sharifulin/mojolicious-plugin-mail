@@ -12,6 +12,7 @@ my $builder = Module::Build->new(
 		'Test::More' => 0,
 	},
 	requires => {
+		'perl'           => 5.008007,
 		'Encode'         => 0,
 		'MIME::Lite'     => 3.027,
 		'MIME::EncWords' => 0,

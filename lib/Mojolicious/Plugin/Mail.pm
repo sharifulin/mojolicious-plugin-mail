@@ -14,7 +14,7 @@ use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '0.7';
+our $VERSION = '0.8';
 
 __PACKAGE__->attr(conf => sub { +{} });
 
@@ -49,7 +49,7 @@ sub register {
 				keys %$args
 			;
 			
-			$args->{mail}->{Data   } ||= $self->helper('render_mail', @stash);
+			$args->{mail}->{Data   } ||= $self->render_mail(@stash);
 			$args->{mail}->{Subject} ||= $self->stash ('subject');
 			
 			my $msg  = $plugin->build( %$args );
