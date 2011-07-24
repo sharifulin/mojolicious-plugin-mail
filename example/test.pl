@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+use utf8;
 
 use Mojolicious::Lite;
 
@@ -9,8 +10,8 @@ get '/' => sub {
 	
 	$self->mail(
 		to      => 'sharifulin@gmail.com',
-		subject => 'Mojolicious::Plugin::Mail test mail',
-		data    => "Hello, it's Mojolicious::Plugin::Mail test mail.\n\nIt works!",
+		subject => 'Тестовое сообщение от Mojolicious::Plugin::Mail',
+		data    => "Привет, это тестовое сообщение от Mojolicious::Plugin::Mail.\n\nРаботает!",
 	);
 	
 	$self->render_text('OK');
@@ -18,9 +19,9 @@ get '/' => sub {
 
 get '/render' => sub {
 	shift->mail(to => 'sharifulin@gmail.com', template => 'render');
-} => '*';
+} => 'render';
 
-app->log->level('error');
+# app->log->level('error');
 
 app->start;
 
@@ -30,7 +31,7 @@ __DATA__
 OK
 
 @@ render.mail.ep
-% stash subject => 'Mojolicious::Plugin::Mail test mail';
-Hello, it's Mojolicious::Plugin::Mail test mail.
+% stash subject => 'Тестовое сообщение от Mojolicious::Plugin::Mail';
+Привет, это тестовое сообщение от Mojolicious::Plugin::Mail.
 
-It works too!
+Тоже работает!

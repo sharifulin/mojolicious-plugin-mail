@@ -1,5 +1,9 @@
 Revision history for Mojolicious-Plugin-Mail
 
+0.81  2011-07-24/23:48
+	* Remove warning "Wide character" (isage)
+	* Change example/test.pl
+
 0.8   2010-12-30/18:34
 	* Cleanup for Mojolicious 1.0
 

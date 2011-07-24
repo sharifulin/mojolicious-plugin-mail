@@ -14,7 +14,7 @@ use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '0.8';
+our $VERSION = '0.81';
 
 __PACKAGE__->attr(conf => sub { +{} });
 
@@ -66,7 +66,7 @@ sub register {
 			my $data = $self->render_partial(@_, format => 'mail');
 			
 			delete @{$self->stash}{ qw(partial mojo.content mojo.rendered format) };
-			return $data;
+			return $data->to_string;
 		},
 	);
 }
