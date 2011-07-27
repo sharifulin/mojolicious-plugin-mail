@@ -2,6 +2,7 @@
 use lib qw(lib ../../lib);
 use utf8;
 
+BEGIN { $ENV{MOJO_NO_BONJOUR}++ };
 use Mojolicious::Lite;
 
 app->log->level('error');

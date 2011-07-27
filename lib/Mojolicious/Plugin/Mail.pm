@@ -14,7 +14,7 @@ use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '0.81';
+our $VERSION = '0.82';
 
 __PACKAGE__->attr(conf => sub { +{} });
 

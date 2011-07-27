@@ -1,5 +1,8 @@
 Revision history for Mojolicious-Plugin-Mail
 
+0.82  2011-07-27/17:41
+	* Got CPAN Testers Report, try MOJO_NO_BONJOUR=1
+
 0.81  2011-07-24/23:48
 	* Remove warning "Wide character" (isage)
 	* Change example/test.pl
