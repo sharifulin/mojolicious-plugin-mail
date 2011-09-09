@@ -7,8 +7,8 @@ Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail
 
 =head1 SYNOPSIS
 
-   # Mojolicious::Lite
-   plugin 'mail';
+  # Mojolicious::Lite
+  plugin 'mail';
 
   # Mojolicious with config
   $self->plugin(mail => {
@@ -442,7 +442,7 @@ L<http://search.cpan.org/dist/Mojolicious-Plugin-Mail>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (C) 2010 by Anatoly Sharifulin.
+Copyright (C) 2010-2011 by Anatoly Sharifulin.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

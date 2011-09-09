@@ -1,9 +1,5 @@
 package Mojolicious::Plugin::Mail;
-
-use strict;
-use warnings;
-
-use base 'Mojolicious::Plugin';
+use Mojo::Base 'Mojolicious::Plugin';
 
 use Encode ();
 use MIME::Lite;
@@ -14,9 +10,9 @@ use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '0.82';
+our $VERSION = '0.83';
 
-__PACKAGE__->attr(conf => sub { +{} });
+has conf => sub { +{} };
 
 sub register {
 	my ($plugin, $app, $conf) = @_;
@@ -28,7 +24,7 @@ sub register {
 	
 	$plugin->conf( $conf ) if $conf;
 	
-	$app->renderer->add_helper(
+	$app->helper(
 		mail => sub {
 			my $self = shift;
 			my $args = @_ ? { @_ } : return;
@@ -60,13 +56,13 @@ sub register {
 		},
 	);
 	
-	$app->renderer->add_helper(
+	$app->helper(
 		render_mail => sub {
 			my $self = shift;
 			my $data = $self->render_partial(@_, format => 'mail');
 			
 			delete @{$self->stash}{ qw(partial mojo.content mojo.rendered format) };
-			return $data->to_string;
+			return $data;
 		},
 	);
 }
@@ -123,6 +119,7 @@ sub build {
 	
 	# header
 	$msg->delete('X-Mailer'); # remove default MIME::Lite header
+	
 	$msg->add   ( %$_ ) for @{$p->{headers} || []}; # XXX: add From|To|Cc|Bcc => ... (mimeword)
 	$msg->add   ('X-Mailer' => join ' ', 'Mojolicious',  $Mojolicious::VERSION, __PACKAGE__, $VERSION, '(Perl)')
 		unless $msg->get('X-Mailer') || $p->{nomailer};
@@ -164,8 +161,8 @@ Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail
 
 =head1 SYNOPSIS
 
-   # Mojolicious::Lite
-   plugin 'mail';
+  # Mojolicious::Lite
+  plugin 'mail';
 
   # Mojolicious with config
   $self->plugin(mail => {
@@ -599,7 +596,7 @@ L<http://search.cpan.org/dist/Mojolicious-Plugin-Mail>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (C) 2010 by Anatoly Sharifulin.
+Copyright (C) 2010-2011 by Anatoly Sharifulin.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

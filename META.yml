@@ -6,7 +6,7 @@ build_requires:
   Test::More: 0
 configure_requires:
   Module::Build: 0.36
-generated_by: 'Module::Build version 0.3607'
+generated_by: 'Module::Build version 0.3603'
 keywords:
   - mojo
   - mojolicious
@@ -21,7 +21,7 @@ name: Mojolicious-Plugin-Mail
 provides:
   Mojolicious::Plugin::Mail:
     file: lib/Mojolicious/Plugin/Mail.pm
-    version: 0.81
+    version: 0.82
 requires:
   Encode: 0
   MIME::EncWords: 0
@@ -31,4 +31,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: http://github.com/sharifulin/Mojolicious-Plugin-Mail
-version: 0.81
+version: 0.82

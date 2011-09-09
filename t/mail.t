@@ -240,9 +240,9 @@ $json = $t->get_ok('/simple')
 	
 	is $h->header('To'), 'sharifulin@gmail.com';
 	is $h->header('From'), 'sharifulin@gmail.com';
-	is $h->header('Subject'), "=?UTF-8?B?" . b('Тест письмо')->b64_encode('') . "?=";
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Тест письмо')->encode('UTF-8')->b64_encode('') . "?=";
 	
-	is $body, b("<p>Привет!</p>")->b64_encode, 'simple';
+	is $body, b("<p>Привет!</p>")->encode('UTF-8')->b64_encode, 'simple';
 }
 
 $json = $t->get_ok('/simple1')
@@ -267,9 +267,9 @@ $json = $t->get_ok('/simple1')
 	
 	is $h->header('To'), 'sharifulin@gmail.com';
 	is $h->header('From'), 'sharifulin@gmail.com';
-	is $h->header('Subject'), "=?UTF-8?B?" . b('Тест письмо')->b64_encode('') . "?=";
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Тест письмо')->encode('UTF-8')->b64_encode('') . "?=";
 	
-	is $body, b("<p>Привет!</p>")->b64_encode, 'simple';
+	is $body, b("<p>Привет!</p>")->encode('UTF-8')->b64_encode, 'simple';
 }
 
 $json = $t->get_ok('/simple2')
@@ -296,7 +296,7 @@ $json = $t->get_ok('/simple2')
 	is $h->header('From'), 'sharifulin@gmail.com';
 	is $h->header('Subject'), "=?UTF-8?B?0KLQtdGB0YIg0L/QuNGB0YzQvNC+?=";
 	
-	is $body, b("<p>Привет!</p>")->b64_encode, 'simple2';
+	is $body, b("<p>Привет!</p>")->encode('UTF-8')->b64_encode, 'simple2';
 }
 
 $json = $t->get_ok('/attach')
@@ -377,7 +377,7 @@ my $data = $t->get_ok('/render')
 	is $h->header('From'), 'sharifulin@gmail.com';
 	is $h->header('Subject'), "=?UTF-8?B?0KLQtdGB0YIgcmVuZGVy?=";
 	
-	is $body, b("<p>Привет mail render!</p>\n")->b64_encode, 'render';
+	is $body, b("<p>Привет mail render!</p>\n")->encode('UTF-8')->b64_encode, 'render';
 }
 
 my $d = $t->get_ok('/render2')
@@ -403,7 +403,7 @@ my $d = $t->get_ok('/render2')
 	
 	is $h->header('To'), 'sharifulin@gmail.com';
 	is $h->header('From'), 'sharifulin@gmail.com';
-	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->b64_encode('') . "?=";
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->encode('UTF-8')->b64_encode('') . "?=";
 	
 	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render2';
 }
@@ -431,7 +431,7 @@ $d = $t->get_ok('/render_without_subject')
 	
 	is $h->header('To'), 'sharifulin@gmail.com';
 	is $h->header('From'), 'sharifulin@gmail.com';
-	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->b64_encode('') . "?=";
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->encode('UTF-8')->b64_encode('') . "?=";
 	
 	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render_without_subject';
 }
@@ -459,7 +459,7 @@ $d = $t->get_ok('/render_without_data')
 	
 	is $h->header('To'), 'sharifulin@gmail.com';
 	is $h->header('From'), 'sharifulin@gmail.com';
-	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->b64_encode('') . "?=";
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->encode('UTF-8')->b64_encode('') . "?=";
 	
 	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render_without_data';
 }
@@ -487,7 +487,7 @@ $d = $t->get_ok('/render_simple')
 	
 	is $h->header('To'), 'sharifulin@gmail.com';
 	is $h->header('From'), 'tollik@mail.ru';
-	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->b64_encode('') . "?=";
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->encode('UTF-8')->b64_encode('') . "?=";
 	
 	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render_simple';
 }

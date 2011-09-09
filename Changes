@@ -1,5 +1,9 @@
 Revision history for Mojolicious-Plugin-Mail
 
+0.83  2011-09-09/09:42
+	* remove old syntax
+	* add encode('UTF-8') into the test RT #70814
+
 0.82  2011-07-27/17:41
 	* Got CPAN Testers Report, try MOJO_NO_BONJOUR=1
 
