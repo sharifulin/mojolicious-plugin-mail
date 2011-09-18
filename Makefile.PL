@@ -3,17 +3,17 @@ require 5.008007;
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-          'PL_FILES' => {},
-          'INSTALLDIRS' => 'site',
           'NAME' => 'Mojolicious::Plugin::Mail',
-          'EXE_FILES' => [],
           'VERSION_FROM' => 'lib/Mojolicious/Plugin/Mail.pm',
           'PREREQ_PM' => {
-                           'Test::More' => 0,
+                           'Encode' => 0,
                            'MIME::EncWords' => 0,
                            'MIME::Lite' => '3.027',
                            'Mojolicious' => '1.17',
-                           'Encode' => 0
-                         }
+                           'Test::More' => 0
+                         },
+          'INSTALLDIRS' => 'site',
+          'EXE_FILES' => [],
+          'PL_FILES' => {}
         )
 ;
