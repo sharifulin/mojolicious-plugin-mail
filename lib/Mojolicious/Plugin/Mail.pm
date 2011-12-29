@@ -4,6 +4,8 @@ use Mojo::Base 'Mojolicious::Plugin';
 use Encode ();
 use MIME::Lite;
 use MIME::EncWords ();
+use Email::Send;
+use Email::Send::Gmail;
 
 use constant TEST     => $ENV{MOJO_MAIL_TEST} || 0;
 use constant FROM     => 'test-mail-plugin@mojolicio.us';
@@ -50,7 +52,20 @@ sub register {
 			
 			my $msg  = $plugin->build( %$args );
 			my $test = $args->{test} || TEST;
-			$msg->send( $conf->{'how'}, @{$conf->{'howargs'}||[]} ) unless $test;
+            given($conf->{how}){
+                when('gmail') {
+                    my $sender = Email::Send->new({
+                            mailer      => 'Gmail',
+                            mailer_args => [
+                                username => $conf->{mail_user},
+                                password => $conf->{mail_pass},
+                            ] });
+                    $sender->send($msg->as_string);
+                }
+                default {
+                    $msg->send( $conf->{'how'}, @{$conf->{'howargs'}||[]} ) unless $test;
+                }
+            }
 			
 			return $msg->as_string;
 		},
