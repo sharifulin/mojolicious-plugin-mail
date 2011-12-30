@@ -10,6 +10,8 @@ WriteMakefile
                            'MIME::EncWords' => 0,
                            'MIME::Lite' => '3.027',
                            'Mojolicious' => '1.17',
+                           'Email::Send' => 0,
+                           'Email::Send::Gmail' => 0,
                            'Test::More' => 0
                          },
           'INSTALLDIRS' => 'site',
