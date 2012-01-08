@@ -60,7 +60,7 @@ sub register {
                                 username => $conf->{mail_user},
                                 password => $conf->{mail_pass},
                             ] });
-                    $sender->send($msg->as_string);
+                    $sender->send($msg->as_string) unless $test;
                 }
                 default {
                     $msg->send( $conf->{'how'}, @{$conf->{'howargs'}||[]} ) unless $test;
