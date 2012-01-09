@@ -12,10 +12,8 @@ Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail
 
   # Mojolicious with config
   $self->plugin(mail => {
-    from     => 'sharifulin@gmail.com',
-    encoding => 'base64',
-    how      => 'sendmail',
-    howargs  => [ '/usr/sbin/sendmail -t' ],
+    from => 'sharifulin@gmail.com',
+    type => 'text/html',
   });
 
   # in controller
@@ -45,14 +43,16 @@ L<Mojolicious::Plugin::Mail> contains two helpers: I<mail> and I<render_mail>.
 
   # simple interface
   $self->mail(
-      to      => 'sharifulin@gmail.com',
-      from    => 'sharifulin@gmail.com',
+      to       => 'sharifulin@gmail.com',
+      from     => 'sharifulin@gmail.com',
       
-      cc      => '..',
-      bcc     => '..',
+      reply_to => 'reply_to+sharifulin@gmail.com',
       
-      subject => 'Test',
-      data    => 'use Perl or die;',
+      cc       => '..',
+      bcc      => '..',
+      
+      subject  => 'Test',
+      data     => 'use Perl or die;',
   );
 
   # interface as MIME::Lite
@@ -90,7 +90,7 @@ Build and send email, return mail as string.
 
 Supported parameters:
 
-=over 14
+=over 15
 
 =item * to
 
@@ -99,6 +99,10 @@ Header 'To' of mail.
 =item * from
 
 Header 'From' of mail.
+
+=item * reply_to
+
+Header 'Reply-To' of mail.
 
 =item * cc
 
@@ -360,11 +364,11 @@ Multipart mixed mail:
     );
   };
 
-Render mail using simple interface and new Mojolicious version:
+Render mail using simple interface and Reply-To header:
 
   get '/render_simple' => sub {
     my $self = shift;
-    my $mail = $self->mail(to => 'sharifulin@gmail.com');
+    my $mail = $self->mail(to => 'sharifulin@gmail.com', reply_to => 'reply_to+sharifulin@gmail.com');
 
     $self->render(ok => 1, mail => $mail);
 } => 'render';
@@ -442,7 +446,7 @@ L<http://search.cpan.org/dist/Mojolicious-Plugin-Mail>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (C) 2010-2011 by Anatoly Sharifulin.
+Copyright (C) 2010-2012 by Anatoly Sharifulin.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

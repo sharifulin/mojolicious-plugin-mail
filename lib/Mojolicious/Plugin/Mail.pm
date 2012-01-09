@@ -1,16 +1,16 @@
 package Mojolicious::Plugin::Mail;
 use Mojo::Base 'Mojolicious::Plugin';
 
-use Encode ();
 use MIME::Lite;
 use MIME::EncWords ();
+use Mojo::ByteStream 'b';
 
 use constant TEST     => $ENV{MOJO_MAIL_TEST} || 0;
 use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '0.83';
+our $VERSION = '0.9';
 
 has conf => sub { +{} };
 
@@ -33,7 +33,7 @@ sub register {
 			unless (exists $args->{mail}) {
 				$args->{mail}->{ $_->[1] } = delete $args->{ $_->[0] }
 					for grep { $args->{ $_->[0] } }
-						[to => 'To'], [from => 'From'], [cc => 'Cc'], [bcc => 'Bcc'], [subject => 'Subject'], [data => 'Data']
+						[to => 'To'], [from => 'From'], [reply_to => 'Reply-To'], [cc => 'Cc'], [bcc => 'Bcc'], [subject => 'Subject'], [data => 'Data']
 				;
 			}
 			
@@ -41,7 +41,7 @@ sub register {
 			
 			my @stash =
 				map  { $_ => $args->{$_} }
-				grep { !/^(to|from|cc|bcc|subject|data|test|mail|attach|headers|attr|charset|mimeword|nomailer)$/ }
+				grep { !/^(to|from|reply_to|cc|bcc|subject|data|test|mail|attach|headers|attr|charset|mimeword|nomailer)$/ }
 				keys %$args
 			;
 			
@@ -85,16 +85,16 @@ sub build {
 	
 	if ($mail->{Data}) {
 		$mail->{Encoding} ||= $encoding;
-		_enc($mail->{Data});
+		_enc($mail->{Data} => $charset);
 	}
 	
 	if ($mimeword) {
-		$_ = MIME::EncWords::encode_mimeword($_, $encode, $charset) for grep { _enc($_); 1 } $mail->{Subject};
+		$_ = MIME::EncWords::encode_mimeword($_, $encode, $charset) for grep { _enc($_ => $charset); 1 } $mail->{Subject};
 		
 		for (grep { $mail->{$_} } qw(From To Cc Bcc)) {
 			$mail->{$_} = join ",\n",
 				grep {
-					_enc($_);
+					_enc($_ => $charset);
 					{
 						next unless /(.*) \s+ (\S+ @ .*)/x;
 						
@@ -133,7 +133,7 @@ sub build {
 		grep {
 			if (!$_->{Type} || $_->{Type} eq 'TEXT') {
 				$_->{Encoding} ||= $encoding;
-				_enc($_->{Data});
+				_enc($_->{Data} => $charset);
 			}
 			1;
 		}
@@ -144,8 +144,9 @@ sub build {
 	return $msg;
 }
 
-sub _enc($) {
-	Encode::_utf8_off($_[0]) if $_[0] && Encode::is_utf8($_[0]);
+sub _enc($$) {
+	my $charset = $_[1] || CHARSET;
+	$_[0] = b($_[0])->encode('UTF-8')->to_string if $charset && $charset =~ /utf-8/i;
 	return $_[0];
 }
 
@@ -166,10 +167,8 @@ Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail
 
   # Mojolicious with config
   $self->plugin(mail => {
-    from     => 'sharifulin@gmail.com',
-    encoding => 'base64',
-    how      => 'sendmail',
-    howargs  => [ '/usr/sbin/sendmail -t' ],
+    from => 'sharifulin@gmail.com',
+    type => 'text/html',
   });
 
   # in controller
@@ -199,14 +198,16 @@ L<Mojolicious::Plugin::Mail> contains two helpers: I<mail> and I<render_mail>.
 
   # simple interface
   $self->mail(
-      to      => 'sharifulin@gmail.com',
-      from    => 'sharifulin@gmail.com',
+      to       => 'sharifulin@gmail.com',
+      from     => 'sharifulin@gmail.com',
       
-      cc      => '..',
-      bcc     => '..',
+      reply_to => 'reply_to+sharifulin@gmail.com',
       
-      subject => 'Test',
-      data    => 'use Perl or die;',
+      cc       => '..',
+      bcc      => '..',
+      
+      subject  => 'Test',
+      data     => 'use Perl or die;',
   );
 
   # interface as MIME::Lite
@@ -244,7 +245,7 @@ Build and send email, return mail as string.
 
 Supported parameters:
 
-=over 14
+=over 15
 
 =item * to
 
@@ -253,6 +254,10 @@ Header 'To' of mail.
 =item * from
 
 Header 'From' of mail.
+
+=item * reply_to
+
+Header 'Reply-To' of mail.
 
 =item * cc
 
@@ -514,11 +519,11 @@ Multipart mixed mail:
     );
   };
 
-Render mail using simple interface and new Mojolicious version:
+Render mail using simple interface and Reply-To header:
 
   get '/render_simple' => sub {
     my $self = shift;
-    my $mail = $self->mail(to => 'sharifulin@gmail.com');
+    my $mail = $self->mail(to => 'sharifulin@gmail.com', reply_to => 'reply_to+sharifulin@gmail.com');
 
     $self->render(ok => 1, mail => $mail);
 } => 'render';
@@ -596,7 +601,7 @@ L<http://search.cpan.org/dist/Mojolicious-Plugin-Mail>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (C) 2010-2011 by Anatoly Sharifulin.
+Copyright (C) 2010-2012 by Anatoly Sharifulin.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

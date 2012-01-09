@@ -191,9 +191,23 @@ get '/render_simple' => sub {
 	my $self = shift;
 	
 	my $mail = $self->mail(
-		test => 1,
-		to   => 'sharifulin@gmail.com',
-		from => 'tollik@mail.ru',
+		test     => 1,
+		from     => 'tollik@mail.ru',
+		to       => 'sharifulin@gmail.com',
+		template => 'render2',
+	);
+	
+	$self->render(ok => 1, mail => $mail, template => 'render2');
+};
+
+get '/render_simple_reply_to' => sub {
+	my $self = shift;
+	
+	my $mail = $self->mail(
+		test     => 1,
+		from     => 'tollik@mail.ru',
+		to       => 'sharifulin@gmail.com',
+		reply_to => 'reply_to+sharifulin@gmail.com',
 		template => 'render2',
 	);
 	
@@ -202,7 +216,7 @@ get '/render_simple' => sub {
 
 #
 
-use Test::More tests => 148;
+use Test::More tests => 163;
 use Test::Mojo;
 
 use Mojo::Headers;
@@ -490,6 +504,35 @@ $d = $t->get_ok('/render_simple')
 	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->encode('UTF-8')->b64_encode('') . "?=";
 	
 	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render_simple';
+}
+
+$d = $t->get_ok('/render_simple_reply_to')
+  ->status_is(200)
+  ->tx->res->body
+;
+
+{
+	is defined $d, 1;
+	like $d, qr{<p>Hello render!</p>};
+	like $d, qr{<p>1</p>};
+	
+	$d =~ m{.*<p>(.*?)</p>}s;
+	
+	my($raw, $body) = split /\n\n/, $1;
+	my $h = Mojo::Headers->new; $h->parse("$raw\n\n");
+	
+	is $h->header('MIME-Version'), '1.0';
+	is $h->header('Content-Type'), 'text/html; charset="UTF-8"';
+	is $h->header('Content-Disposition'), 'inline';
+	is $h->header('Content-Transfer-Encoding'), 'base64';
+	like $h->header('X-Mailer'), qr/Mojolicious/;
+	
+	is $h->header('To'), 'sharifulin@gmail.com';
+	is $h->header('From'), 'tollik@mail.ru';
+	is $h->header('Reply-To'), 'reply_to+sharifulin@gmail.com';
+	is $h->header('Subject'), "=?UTF-8?B?" . b('Привет render2')->encode('UTF-8')->b64_encode('') . "?=";
+	
+	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render_simple_reply_to';
 }
 
 __DATA__

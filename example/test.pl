@@ -9,9 +9,10 @@ get '/' => sub {
 	my $self = shift;
 	
 	$self->mail(
-		to      => 'sharifulin@gmail.com',
-		subject => 'Тестовое сообщение от Mojolicious::Plugin::Mail',
-		data    => "Привет, это тестовое сообщение от Mojolicious::Plugin::Mail.\n\nРаботает!",
+		to       => 'sharifulin@gmail.com',
+		reply_to => 'reply_to+sharifulin@gmail.com',
+		subject  => 'Тестовое сообщение от Mojolicious::Plugin::Mail',
+		data     => "Привет, это тестовое сообщение от Mojolicious::Plugin::Mail.\n\nРаботает!",
 	);
 	
 	$self->render_text('OK');
