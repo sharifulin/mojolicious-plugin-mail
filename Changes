@@ -1,5 +1,8 @@
 Revision history for Mojolicious-Plugin-Mail
 
+0.91  2012-01-30/15:58
+	* fixed encoding and multipart
+
 0.9   2012-01-09/21:24
 	* add new encoding, no "Wide character" I hope :-)
 	* add reply_to

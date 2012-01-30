@@ -10,7 +10,7 @@ use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '0.9';
+our $VERSION = '0.91';
 
 has conf => sub { +{} };
 
@@ -83,7 +83,7 @@ sub build {
 	$mail->{From} ||= $conf->{from};
 	$mail->{Type} ||= $conf->{type};
 	
-	if ($mail->{Data}) {
+	if ($mail->{Data} && $mail->{Type} !~ /multipart/) {
 		$mail->{Encoding} ||= $encoding;
 		_enc($mail->{Data} => $charset);
 	}
