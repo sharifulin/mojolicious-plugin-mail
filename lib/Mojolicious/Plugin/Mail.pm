@@ -10,7 +10,7 @@ use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '0.91';
+our $VERSION = '0.92';
 
 has conf => sub { +{} };
 
@@ -33,7 +33,7 @@ sub register {
 			unless (exists $args->{mail}) {
 				$args->{mail}->{ $_->[1] } = delete $args->{ $_->[0] }
 					for grep { $args->{ $_->[0] } }
-						[to => 'To'], [from => 'From'], [reply_to => 'Reply-To'], [cc => 'Cc'], [bcc => 'Bcc'], [subject => 'Subject'], [data => 'Data']
+						[to => 'To'], [from => 'From'], [reply_to => 'Reply-To'], [cc => 'Cc'], [bcc => 'Bcc'], [subject => 'Subject'], [data => 'Data'], [type => 'Type']
 				;
 			}
 			
