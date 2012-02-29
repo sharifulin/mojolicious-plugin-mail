@@ -10,7 +10,7 @@ use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '0.93';
+our $VERSION = '0.94';
 
 has conf => sub { +{} };
 
@@ -133,7 +133,7 @@ sub build {
 	# attach
 	$msg->attach( %$_ ) for
 		grep {
-			if (!$_->{Type} || $_->{Type} eq 'TEXT') {
+			if (!$_->{Type} || $_->{Type} =~ /text/i) {
 				$_->{Encoding} ||= $encoding;
 				_enc($_->{Data} => $charset);
 			}
@@ -148,7 +148,7 @@ sub build {
 
 sub _enc($$) {
 	my $charset = $_[1] || CHARSET;
-	$_[0] = b($_[0])->encode('UTF-8')->to_string if $charset && $charset =~ /utf-8/i;
+	$_[0] = b($_[0])->encode('UTF-8')->to_string if $_[0] && $charset && $charset =~ /utf-8/i;
 	return $_[0];
 }
 

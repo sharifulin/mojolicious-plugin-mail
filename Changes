@@ -1,5 +1,8 @@
 Revision history for Mojolicious-Plugin-Mail
 
+0.94  2012-02-29/16:01
+	* small fixes
+
 0.93  2012-02-29/12:59
 	* add shortcut type for content type of mail (ProtoPlex)
 	* updated docs
