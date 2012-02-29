@@ -51,6 +51,8 @@ L<Mojolicious::Plugin::Mail> contains two helpers: I<mail> and I<render_mail>.
       cc       => '..',
       bcc      => '..',
       
+      type     => 'text/plain',
+
       subject  => 'Test',
       data     => 'use Perl or die;',
   );
@@ -90,7 +92,7 @@ Build and send email, return mail as string.
 
 Supported parameters:
 
-=over 15
+=over 16
 
 =item * to
 
@@ -111,6 +113,10 @@ Header 'Cc' of mail.
 =item * bcc
 
 Header 'Bcc' of mail.
+
+=item * type
+
+Content type of mail, default is conf's type.
 
 =item * subject
 
@@ -257,15 +263,16 @@ L<Mojolicious::Plugin::Mail> has test mode, no send mail.
 
 The Mojolicious::Lite example you can see in I<example/test.pl>.
 
-Simple interface for send mail:
+Simple interface for send plain mail:
 
   get '/simple' => sub {
     my $self = shift;
     
     $self->mail(
       to      => 'sharifulin@gmail.com',
+      type    => 'text/plain',
       subject => 'Тест письмо',
-      data    => "<p>Привет!</p>",
+      data    => 'Привет!',
     );
   };
 

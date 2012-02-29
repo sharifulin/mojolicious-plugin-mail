@@ -10,7 +10,7 @@ use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '0.92';
+our $VERSION = '0.93';
 
 has conf => sub { +{} };
 
@@ -33,7 +33,9 @@ sub register {
 			unless (exists $args->{mail}) {
 				$args->{mail}->{ $_->[1] } = delete $args->{ $_->[0] }
 					for grep { $args->{ $_->[0] } }
-						[to => 'To'], [from => 'From'], [reply_to => 'Reply-To'], [cc => 'Cc'], [bcc => 'Bcc'], [subject => 'Subject'], [data => 'Data'], [type => 'Type']
+						[to   => 'To'  ], [from => 'From'], [reply_to => 'Reply-To'],
+						[cc   => 'Cc'  ], [bcc  => 'Bcc' ], [subject  => 'Subject' ],
+						[data => 'Data'], [type => 'Type'],
 				;
 			}
 			
@@ -41,7 +43,7 @@ sub register {
 			
 			my @stash =
 				map  { $_ => $args->{$_} }
-				grep { !/^(to|from|reply_to|cc|bcc|subject|data|test|mail|attach|headers|attr|charset|mimeword|nomailer)$/ }
+				grep { !/^(to|from|reply_to|cc|bcc|subject|data|type|test|mail|attach|headers|attr|charset|mimeword|nomailer)$/ }
 				keys %$args
 			;
 			
@@ -206,6 +208,8 @@ L<Mojolicious::Plugin::Mail> contains two helpers: I<mail> and I<render_mail>.
       cc       => '..',
       bcc      => '..',
       
+      type     => 'text/plain',
+
       subject  => 'Test',
       data     => 'use Perl or die;',
   );
@@ -245,7 +249,7 @@ Build and send email, return mail as string.
 
 Supported parameters:
 
-=over 15
+=over 16
 
 =item * to
 
@@ -266,6 +270,10 @@ Header 'Cc' of mail.
 =item * bcc
 
 Header 'Bcc' of mail.
+
+=item * type
+
+Content type of mail, default is conf's type.
 
 =item * subject
 
@@ -412,15 +420,16 @@ L<Mojolicious::Plugin::Mail> has test mode, no send mail.
 
 The Mojolicious::Lite example you can see in I<example/test.pl>.
 
-Simple interface for send mail:
+Simple interface for send plain mail:
 
   get '/simple' => sub {
     my $self = shift;
     
     $self->mail(
       to      => 'sharifulin@gmail.com',
+      type    => 'text/plain',
       subject => 'Тест письмо',
-      data    => "<p>Привет!</p>",
+      data    => 'Привет!',
     );
   };
 
