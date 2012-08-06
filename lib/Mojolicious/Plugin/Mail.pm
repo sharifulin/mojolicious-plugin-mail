@@ -221,9 +221,13 @@ L<Mojolicious::Plugin::Mail> contains two helpers: I<mail> and I<render_mail>.
       
       # as MIME::Lite->new( ... )
       mail   => {
-        To      => 'sharifulin@gmail.com',
-        Subject => 'Test',
-        Data    => 'use Perl or die;',
+        To       => 'sharifulin@gmail.com',
+        Subject  => 'Test',
+        Data     => 'use Perl or die;',
+        
+        # add credentials parameters
+        AuthUser => 'username',
+        AuthPass => 'password',
       },
 
       attach => [
