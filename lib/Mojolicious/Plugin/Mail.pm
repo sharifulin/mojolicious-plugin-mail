@@ -371,7 +371,7 @@ HOW parameter of MIME::Lite::send: I<sendmail> or I<smtp>.
 
 =item * howargs 
 
-HOWARGS parameter of MIME::Lite::send (arrayref).
+HOWARGS parameter of MIME::Lite::send as arrayref (I<host>, I<timeout>, I<authuser>, I<authpass>).
 
 =back
 
@@ -565,6 +565,29 @@ Mail with render data and subject from stash param:
   % stash 'subject' => 'Привет render';
   
   <p>Привет mail render!</p>
+
+Send email via remote SMTP server.
+
+  # in main
+  $self->plugin(mail => {
+      from => 'info@host.example',
+      type => 'text/html',
+      how  => 'smtp',
+      howargs => [ 'mail.host.example', # server
+                   60,                  # timeout
+                   'me@host.example',   # user
+                   '123xyz',            # pass
+                 ],  
+  }); 
+  
+  # in controller
+  $self->mail(
+    to      => 'friend@hishost.example',
+    subject => 'Test',
+    data    => 'use Perl or die;',
+  );  
+
+
 
 =head1 SEE ALSO
 
