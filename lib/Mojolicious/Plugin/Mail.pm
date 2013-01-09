@@ -566,6 +566,28 @@ Mail with render data and subject from stash param:
   
   <p>Привет mail render!</p>
 
+Send email via remote SMTP server.
+
+  # in main
+  $self->plugin(
+    mail => {
+      from    => 'info@host.example',
+      type    => 'text/html',
+      how     => 'smtp',
+      howargs => [ 'mail.host.example',
+                      AuthUser => 'me@host.example',
+                      AuthPass => '123xyz',
+                 ],
+    }
+  );
+  
+  # in controller
+  $self->mail(
+    to      => 'friend@hishost.example',
+    subject => 'Test',
+    data    => 'use Perl or die;',
+  );
+
 =head1 SEE ALSO
 
 L<MIME::Lite> L<MIME::EncWords> L<Mojolicious> L<Mojolicious::Guides> L<http://mojolicious.org>.
