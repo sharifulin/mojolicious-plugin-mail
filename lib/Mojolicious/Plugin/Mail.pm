@@ -43,7 +43,7 @@ sub register {
 			
 			my @stash =
 				map  { $_ => $args->{$_} }
-				grep { !/^(to|from|reply_to|cc|bcc|subject|data|type|test|mail|attach|headers|attr|charset|mimeword|nomailer)$/ }
+				grep { !/^(to|from|reply_to|cc|bcc|subject|data|type|test|mail|attach|headers|attr|charset|mimeword|nomailer|how|howargs)$/ }
 				keys %$args
 			;
 			
@@ -52,7 +52,9 @@ sub register {
 			
 			my $msg  = $plugin->build( %$args );
 			my $test = $args->{test} || TEST;
-			$msg->send( $conf->{'how'}, @{$conf->{'howargs'}||[]} ) unless $test;
+			my $how  = $args->{how} || $conf->{how};
+			my $howargs = $args->{howargs} || $conf->{howargs} || [];
+			$msg->send( $how, @$howargs ) unless $test;
 			
 			return $msg->as_string;
 		},
@@ -586,6 +588,18 @@ Send email via remote SMTP server.
     to      => 'friend@hishost.example',
     subject => 'Test',
     data    => 'use Perl or die;',
+  );
+
+  # or set server individually
+  $self->mail(
+    to      => 'friend@hishost.example',
+    subject => 'Test',
+    data    => 'use Perl or die;',
+    how     => 'smtp',
+    howargs => [ 'mail.host.example',
+                    AuthUser => 'me@host.example',
+                    AuthPass => '123xyz',
+               ],
   );
 
 =head1 SEE ALSO

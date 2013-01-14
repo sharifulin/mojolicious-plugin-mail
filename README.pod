@@ -158,6 +158,14 @@ Using mimeword or not, default value is 1.
 
 No using 'X-Mailer' header of mail, default value is 1.
 
+=item * how
+
+HOW parameter of MIME::Lite::send: I<sendmail> or I<smtp>, default is conf's how.
+
+=item * howargs
+
+HOWARGS parameter of MIME::Lite::send (arrayref), default are conf's howargs.
+
 =back
 
 If no subject, uses value of stash parameter 'subject'.

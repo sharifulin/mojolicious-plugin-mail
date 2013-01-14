@@ -1,2 +1,3 @@
 *.tar.gz
+.project
 MANIFEST.SKIP
