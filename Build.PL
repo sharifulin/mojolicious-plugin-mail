@@ -12,11 +12,11 @@ my $builder = Module::Build->new(
 		'Test::More' => 0,
 	},
 	requires => {
-		'perl'           => 5.008007,
+		'perl'           => 5.001001,
 		'Encode'         => 0,
 		'MIME::Lite'     => 3.027,
 		'MIME::EncWords' => 0,
-		'Mojolicious'    => 1.17,
+		'Mojolicious'    => 4.0,
 	},
 	add_to_cleanup  => [],
 	meta_merge => {

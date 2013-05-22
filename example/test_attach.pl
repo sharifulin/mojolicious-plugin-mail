@@ -9,7 +9,7 @@ get '/' => sub {
 	my $self = shift;
 	
 	my $data = $self->render_mail(template => 'render');
-	my $att  = $self->render_partial('partial');
+	my $att  = $self->render('partial', partial => 1);
 	
 	warn $self->mail(
 		mail => {

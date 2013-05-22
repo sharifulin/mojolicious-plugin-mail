@@ -34,6 +34,7 @@ Mojolicious::Plugin::Mail - Mojolicious Plugin for send mail
 =head1 DESCRIPTION
 
 L<Mojolicous::Plugin::Mail> is a plugin for Mojolicious apps to send mail using L<MIME::Lite>.
+Mojolicious 4.0 ready.
 
 =head1 HELPERS
 

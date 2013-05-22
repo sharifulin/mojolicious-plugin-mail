@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-use lib qw(lib ../../lib);
+use lib qw(lib ../lib ../mojo/lib ../../mojo/lib);
 use utf8;
 
 BEGIN { $ENV{MOJO_NO_BONJOUR}++ };
@@ -17,7 +17,7 @@ plugin mail => {
 
 get '/empty' => sub {
 	my $self = shift;
-	$self->render_json({ ok => 1, mail => $self->mail || undef})
+	$self->render(json => { ok => 1, mail => $self->mail || undef})
 };
 
 get '/simple' => sub {
@@ -30,7 +30,7 @@ get '/simple' => sub {
 		data    => "<p>Привет!</p>",
 	);
 	
-	$self->render_json({ ok => 1, mail => $mail });
+	$self->render(json => { ok => 1, mail => $mail });
 };
 
 get '/simple1' => sub {
@@ -45,7 +45,7 @@ get '/simple1' => sub {
 		},
 	);
 	
-	$self->render_json({ ok => 1, mail => $mail });
+	$self->render(json => { ok => 1, mail => $mail });
 };
 
 get '/simple2' => sub {
@@ -64,7 +64,7 @@ get '/simple2' => sub {
 		},
 	);
 	
-	$self->render_json({ ok => 1, mail => $mail });
+	$self->render(json => { ok => 1, mail => $mail });
 };
 
 get '/attach' => sub {
@@ -93,7 +93,7 @@ get '/attach' => sub {
 		headers => [ { 'X-My-Header' => 'Mojolicious' }, { 'X-Mailer' => 'My mail client' } ],
 	);
 	
-	$self->render_json({ ok => 1, mail => $mail });
+	$self->render(json => { ok => 1, mail => $mail });
 };
 
 get '/multi' => sub {
@@ -126,7 +126,7 @@ get '/multi' => sub {
 		],
 	);
 	
-	$self->render_json({ ok => 1, mail => $mail });
+	$self->render(json => { ok => 1, mail => $mail });
 };
 
 get '/render' => sub {
@@ -231,7 +231,7 @@ get '/render_simple_reply_to_plain' => sub {
 
 #
 
-use Test::More tests => 178;
+use Test::More;
 use Test::Mojo;
 
 use Mojo::Headers;
@@ -244,7 +244,7 @@ my $json;
 
 $t->get_ok('/empty')
   ->status_is(200)
-  ->json_content_is({ok => 1, mail => undef}, 'empty')
+  ->json_is({ok => 1, mail => undef}, 'empty')
 ;
 
 $json = $t->get_ok('/simple')
@@ -579,6 +579,8 @@ $d = $t->get_ok('/render_simple_reply_to_plain')
 	is $body, "CjxwPtCf0YDQuNCy0LXRgiBtYWlsIHJlbmRlcjIhPC9wPgo=\n", 'render_simple_reply_to_plain';
 }
 
+done_testing;
+
 __DATA__
 
 @@ render.html.ep
@@ -595,6 +597,6 @@ __DATA__
 <p><%== $mail %></p>
 
 @@ render2.mail.ep
-% stash 'subject' => 'Привет render2';
+% stash subject => 'Привет render2';
 
 <p>Привет mail render2!</p>

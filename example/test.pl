@@ -15,7 +15,7 @@ get '/' => sub {
 		data     => "Привет, это тестовое сообщение от Mojolicious::Plugin::Mail.\n\nРаботает!",
 	);
 	
-	$self->render_text('OK');
+	$self->render(text => 'OK');
 };
 
 get '/render' => sub {

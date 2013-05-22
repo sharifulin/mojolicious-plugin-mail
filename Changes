@@ -1,5 +1,8 @@
 Revision history for Mojolicious-Plugin-Mail
 
+0.95  2013-05-23/01:09
+	* Mojolicious 4.0 ready
+
 0.94  2012-02-29/16:01
 	* small fixes
 
