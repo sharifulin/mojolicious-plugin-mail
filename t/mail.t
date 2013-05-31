@@ -138,7 +138,7 @@ get '/render' => sub {
 			To      => 'sharifulin@gmail.com',
 			Subject => 'Тест render',
 			Data    => '',
-			Data    => $self->render_partial('render', format => 'mail'),
+			Data    => $self->render('render', partial => 1, format => 'mail'),
 		},
 	);
 	
