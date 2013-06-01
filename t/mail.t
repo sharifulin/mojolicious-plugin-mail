@@ -242,6 +242,10 @@ use Data::Dumper;
 my $t = Test::Mojo->new;
 my $json;
 
+like $Mojolicious::VERSION, qr/^4\.\d+$/, 'Check Mojolicious 4.0';
+
+#
+
 $t->get_ok('/empty')
   ->status_is(200)
   ->json_is({ok => 1, mail => undef}, 'empty')

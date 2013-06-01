@@ -21,7 +21,7 @@ name: Mojolicious-Plugin-Mail
 provides:
   Mojolicious::Plugin::Mail:
     file: lib/Mojolicious/Plugin/Mail.pm
-    version: 0.95
+    version: 1.0
 requires:
   Encode: 0
   MIME::EncWords: 0
@@ -31,4 +31,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: http://github.com/sharifulin/Mojolicious-Plugin-Mail
-version: 0.95
+version: 1.0
