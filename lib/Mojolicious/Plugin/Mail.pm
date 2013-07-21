@@ -63,7 +63,7 @@ sub register {
 			my $self = shift;
 			my $data = $self->render(@_, format => 'mail', partial => 1);
 			
-			delete @{$self->stash}{ qw(partial cb format mojo.captures mojo.started mojo.content mojo.routed mojo.secret) };
+			delete @{$self->stash}{ qw(partial cb format mojo.captures mojo.started mojo.content mojo.routed) };
 			$data;
 		},
 	);
