@@ -10,7 +10,7 @@ use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '0.95';
+our $VERSION = '1.1';
 
 has conf => sub { +{} };
 
@@ -63,7 +63,7 @@ sub register {
 			my $self = shift;
 			my $data = $self->render(@_, format => 'mail', partial => 1);
 			
-			delete @{$self->stash}{ qw(partial cb format mojo.captures mojo.started mojo.content mojo.routed mojo.secret) };
+			delete @{$self->stash}{ qw(partial cb format mojo.captures mojo.started mojo.content mojo.routed) };
 			$data;
 		},
 	);
@@ -638,7 +638,7 @@ L<http://search.cpan.org/dist/Mojolicious-Plugin-Mail>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (C) 2010-2012 by Anatoly Sharifulin.
+Copyright (C) 2010-2013 by Anatoly Sharifulin.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

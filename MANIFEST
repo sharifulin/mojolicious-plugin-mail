@@ -7,3 +7,4 @@ t/mail.t
 example/test.pl
 Makefile.PL
 META.yml
+META.json
