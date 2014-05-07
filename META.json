@@ -1,0 +1,60 @@
+{
+   "abstract" : "Mojolicious Plugin for send mail",
+   "author" : [
+      "Anatoly Sharifulin <sharifulin@gmail.com>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.4203",
+   "keywords" : [
+      "mojo",
+      "mojolicious",
+      "mime",
+      "mail",
+      "plugin"
+   ],
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Mojolicious-Plugin-Mail",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::More" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.42"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Encode" : "0",
+            "MIME::EncWords" : "0",
+            "MIME::Lite" : "3.027",
+            "Mojolicious" : "4",
+            "perl" : "5.001001"
+         }
+      }
+   },
+   "provides" : {
+      "Mojolicious::Plugin::Mail" : {
+         "file" : "lib/Mojolicious/Plugin/Mail.pm",
+         "version" : "1.2"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
+      "repository" : {
+         "url" : "http://github.com/sharifulin/Mojolicious-Plugin-Mail"
+      }
+   },
+   "version" : "1.2"
+}

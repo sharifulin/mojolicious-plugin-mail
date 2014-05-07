@@ -1,5 +1,8 @@
 Revision history for Mojolicious-Plugin-Mail
 
+1.2  2014-05-07/13:08
+	* Fixed tests, thnx github.com
+
 1.1  2013-10-13/19:19
 	* Fixed bug with session, thnx github.com
 	* Cleanup
