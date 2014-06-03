@@ -59,13 +59,7 @@ sub register {
 	);
 	
 	$app->helper(
-		render_mail => sub {
-			my $self = shift;
-			my $data = $self->render_to_string(@_, format => 'mail');
-			
-			# delete @{$self->stash}{ qw(cb format mojo.captures mojo.started mojo.content mojo.routed) };
-			$data;
-		},
+		render_mail => sub { shift->render_to_string(@_, format => 'mail') }
 	);
 }
 
