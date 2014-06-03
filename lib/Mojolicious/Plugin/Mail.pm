@@ -61,9 +61,9 @@ sub register {
 	$app->helper(
 		render_mail => sub {
 			my $self = shift;
-			my $data = $self->render(@_, format => 'mail', partial => 1);
+			my $data = $self->render_to_string(@_, format => 'mail');
 			
-			delete @{$self->stash}{ qw(partial cb format mojo.captures mojo.started mojo.content mojo.routed) };
+			# delete @{$self->stash}{ qw(cb format mojo.captures mojo.started mojo.content mojo.routed) };
 			$data;
 		},
 	);

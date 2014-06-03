@@ -133,13 +133,10 @@ get '/render' => sub {
 	my $self = shift;
 
 	my $mail = $self->mail(
-		test => 1,
-		mail => {
-			To      => 'sharifulin@gmail.com',
-			Subject => 'Тест render',
-			Data    => '',
-			Data    => $self->render('render', partial => 1, format => 'mail'),
-		},
+		test    => 1,
+		to      => 'sharifulin@gmail.com',
+		subject => 'Тест render',
+		data    => $self->render_to_string('render', format => 'mail'),
 	);
 	
 	$self->render(format => 'html', ok => 1, mail => $mail);
@@ -151,11 +148,9 @@ get '/render2' => sub {
 	my $data = $self->render_mail('render2');
 	my $mail = $self->mail(
 		test => 1,
-		mail => {
-			To      => 'sharifulin@gmail.com',
-			Subject => $self->stash('subject'),
-			Data    => $data,
-		},
+		to      => 'sharifulin@gmail.com',
+		subject => $self->stash('subject'),
+		data    => $data,
 	);
 	
 	$self->render(ok => 1, mail => $mail);
@@ -167,10 +162,8 @@ get '/render_without_subject' => sub {
 	my $data = $self->render_mail('render2');
 	my $mail = $self->mail(
 		test => 1,
-		mail => {
-			To   => 'sharifulin@gmail.com',
-			Data => $data,
-		},
+		to   => 'sharifulin@gmail.com',
+		data => $data,
 	);
 	
 	$self->render(ok => 1, mail => $mail);
@@ -181,7 +174,7 @@ get '/render_without_data' => sub {
 	
 	my $mail = $self->mail(
 		test => 1,
-		mail => { To => 'sharifulin@gmail.com' },
+		to   => 'sharifulin@gmail.com',
 	);
 	
 	$self->render(ok => 1, mail => $mail);
@@ -242,7 +235,7 @@ use Data::Dumper;
 my $t = Test::Mojo->new;
 my $json;
 
-like $Mojolicious::VERSION, qr/^4\.\d+$/, 'Check Mojolicious 4.0';
+like $Mojolicious::VERSION, qr/^5\.\d+$/, 'Check Mojolicious 5.0';
 
 #
 
