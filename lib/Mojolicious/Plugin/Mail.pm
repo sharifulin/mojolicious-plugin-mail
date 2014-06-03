@@ -10,7 +10,7 @@ use constant FROM     => 'test-mail-plugin@mojolicio.us';
 use constant CHARSET  => 'UTF-8';
 use constant ENCODING => 'base64';
 
-our $VERSION = '1.2';
+our $VERSION = '1.3';
 
 has conf => sub { +{} };
 
