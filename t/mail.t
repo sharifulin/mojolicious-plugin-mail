@@ -235,7 +235,7 @@ use Data::Dumper;
 my $t = Test::Mojo->new;
 my $json;
 
-like $Mojolicious::VERSION, qr/^5\.\d+$/, 'Check Mojolicious 5.0';
+like $Mojolicious::VERSION, qr/^5|6\.\d+$/, 'Check Mojolicious version 5.xx or 6.xx';
 
 #
 
