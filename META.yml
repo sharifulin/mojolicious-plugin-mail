@@ -3,11 +3,11 @@ abstract: 'Mojolicious Plugin for send mail'
 author:
   - 'Anatoly Sharifulin <sharifulin@gmail.com>'
 build_requires:
-  Test::More: 0
+  Test::More: '0'
 configure_requires:
-  Module::Build: 0.42
+  Module::Build: '0.42'
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4203, CPAN::Meta::Converter version 2.120921'
+generated_by: 'Module::Build version 0.421, CPAN::Meta::Converter version 2.143240'
 keywords:
   - mojo
   - mojolicious
@@ -17,19 +17,19 @@ keywords:
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: Mojolicious-Plugin-Mail
 provides:
   Mojolicious::Plugin::Mail:
     file: lib/Mojolicious/Plugin/Mail.pm
-    version: 1.3
+    version: '1.5'
 requires:
-  Encode: 0
-  MIME::EncWords: 0
-  MIME::Lite: 3.027
-  Mojolicious: 4
-  perl: 5.001001
+  Encode: '0'
+  MIME::EncWords: '0'
+  MIME::Lite: '3.027'
+  Mojolicious: '5'
+  perl: '5.001001'
 resources:
   license: http://dev.perl.org/licenses/
   repository: http://github.com/sharifulin/Mojolicious-Plugin-Mail
-version: 1.3
+version: '1.5'

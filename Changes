@@ -1,5 +1,8 @@
 Revision history for Mojolicious-Plugin-Mail
 
+1.5 2015-03/16/11:27
+	* Mojolicios 6.0 ready
+
 1.3 2014-06-03/18:10
 	Support Mojolicious 5.0 and higer
 
